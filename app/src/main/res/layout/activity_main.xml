@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#00213E"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="15dp">
+
+        <TextView
+            android:id="@+id/text_titulo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/prueba"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="35sp"/>
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <TableLayout
+            android:id="@+id/tabla_juego"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#1DCBE3FD"
+            android:layout_gravity="center">
+            <TableRow
+                android:id="@+id/primera_fila"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/btn_arriba_izq"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_arriba_ctr"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove"
+                    android:layout_marginHorizontal="12dp">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_arriba_drc"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/segunda_fila"
+                android:gravity="center">
+                <ImageButton
+                    android:id="@+id/btn_centro_izq"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_centro_ctr"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove"
+                    android:layout_marginHorizontal="12dp">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_centro_drc"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tercera_fila"
+                android:gravity="center">
+                <ImageButton
+                    android:id="@+id/btn_abajo_izq"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_abajo_ctr"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove"
+                    android:layout_marginHorizontal="12dp">
+                </ImageButton>
+                <ImageButton
+                    android:id="@+id/btn_abajo_drc"
+                    style="@style/Widget.AppCompat.ImageButton.btn_prove">
+                </ImageButton>
+            </TableRow>
+
+        </TableLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/linea_botones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_izq"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.linea_botones"
+            android:text="@string/rendirse"/>
+        <Button
+            android:id="@+id/btn_ctn"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.linea_botones"
+            android:text="RESTART" />
+        <Button
+            android:id="@+id/btn_drc"
+            style="@style/Base.TextAppearance.AppCompat.Widget.Button.linea_botones"
+            android:text="@string/otra"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/name1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/prueba"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/name2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/prueba"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15sp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/punt1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/prueba_num"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textSize="80sp"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/punt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/prueba_num"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textSize="80sp"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+        </LinearLayout>
+
+
+
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -10,4 +10,5 @@
     <color name="blue_start">#03A9F4</color>
     <color name="green_check">#2AB330</color>
     <color name="red_check">#9F0000</color>
+    <color name="transparente">#00000000</color>
 </resources>

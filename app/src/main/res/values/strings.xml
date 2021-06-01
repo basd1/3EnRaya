@@ -6,4 +6,6 @@
     <string name="prueba_num">0</string>
     <string name="prueba2">Partida de prueba</string>
     <string name="otra">OTRA</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

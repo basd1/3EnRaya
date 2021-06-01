@@ -1,12 +1,17 @@
 package com.example.mytraya2;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.fragment.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +23,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    TextView titulo, punt1, punt2, name1, name2; // titulo superior, puntuaciones y nombres
+    TextView titulo, punt1, punt2, name1, name2, mark1, mark2; // titulo superior, puntuaciones y nombres
     ImageButton b11,b12,b13,b21,b22,b23,b31,b32,b33; // casillas del tablero
     Button b1, b2, b3; // botones inferiores
     boolean turno; // booleano para controlar el turno
@@ -27,11 +32,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<int[]> check; // lista donde estan las combinaciones ganadoras
     ArrayList<Integer> jug1, jug2; // listas donde se almacenan las casillas de cada jugador
     int[] jug = {0,1,2}; // lista para controlar a quien pertenecen las casillas, 0=no usada, 1=j1, 2=j2
+    int rojo, azul, verde;
 
-    // TODO un pequeño marcador para ver a quien le toca
+
+    // TODO un pequeño marcador para ver a quien le toca HECHO, SE PUEDE MEJORAR
     // TODO pdoer editar los nombres
     // TODO poder editar los colores
-    // TODO habilitar la opcion de rendirse
+    // TODO habilitar la opcion de rendirse, la veo innecesaria, las partidas duran segundos
     // TODO maquillar la app con mejoras de diseño y de animaciones, añadir sonidos?
     // TODO trabajar el online
 
@@ -42,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         turno = true;
 
+        declaraciones();
+        preMatch();
         startMatch();
         checkturno(turno);
 
@@ -59,7 +68,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(MainActivity.this, "Has pulsado el botón derecho", Toast.LENGTH_SHORT).show();
             restartMatch();
         });
+
+        name1.setOnClickListener(this::showChangename);
+
+        name2.setOnClickListener(this::showChangename);
     }
+
+    private void preMatch() {
+        name1.setText("VERDE");
+        name2.setText("ROJO");
+
+        b1.setText("ONLINE");
+
+        mark1.setBackgroundTintList(ColorStateList.valueOf(verde));
+        mark2.setBackgroundTintList(ColorStateList.valueOf(rojo));
+    }
+
+    private void showChangename(View view) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+        TextView tv = (TextView) view;
+        alert.setTitle("What's Your name?");
+        alert.setMessage("Seems like you're new here! What's your name?");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(MainActivity.this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String newText = input.getText().toString();
+                tv.setText(newText);
+            }
+        });
+
+        alert.create().show();
+    }
+
+
 
     private void startMatch() {
 
@@ -68,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         jug1 = new ArrayList<>();
         jug2 = new ArrayList<>();
 
-        declaraciones();
         seteandoClickListener();
         check = putSoluciones(check);
 
@@ -77,8 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         states_btns = putMapStates(botones, states_btns);
 
-        name1.setText("VERDE");
-        name2.setText("ROJO");
+        mark1.setVisibility(View.INVISIBLE);
+        mark2.setVisibility(View.INVISIBLE);
+
     }
 
     private void restartMatch() {
@@ -134,9 +180,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkturno(boolean t) {
 
         if (t){
-            titulo.setTextColor(getResources().getColor(R.color.green_check));
+            mark1.setVisibility(View.VISIBLE);
+            mark2.setVisibility(View.INVISIBLE);
         }else{
-            titulo.setTextColor(getResources().getColor(R.color.red_check));
+            mark1.setVisibility(View.INVISIBLE);
+            mark2.setVisibility(View.VISIBLE);
         }
     }
 
@@ -211,6 +259,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         name1 = findViewById(R.id.name1);
         name2 = findViewById(R.id.name2);
+
+        mark1 = findViewById(R.id.mark1);
+        mark2 = findViewById(R.id.mark2);
+
+        azul = getResources().getColor(R.color.blue_start);
+        rojo = getResources().getColor(R.color.red_check);
+        verde = getResources().getColor(R.color.green_check);
 
         b11 = findViewById(R.id.btn_arriba_izq);
         b12 = findViewById(R.id.btn_arriba_ctr);

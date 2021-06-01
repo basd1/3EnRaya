@@ -31,4 +31,9 @@
         <item name="android:textSize">13sp</item>
         <item name="android:layout_margin">7dp</item>
     </style>
+
+    <style name="myDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        ...
+    </style>
 </resources>

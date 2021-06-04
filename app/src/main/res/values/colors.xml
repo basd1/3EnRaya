@@ -11,4 +11,7 @@
     <color name="green_check">#2AB330</color>
     <color name="red_check">#9F0000</color>
     <color name="transparente">#00000000</color>
+    <color name="g1">#010104</color>
+    <color name="g2">#415259</color>
+    <color name="g3">#52878E</color>
 </resources>

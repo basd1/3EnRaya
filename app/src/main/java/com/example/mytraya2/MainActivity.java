@@ -1,18 +1,17 @@
 package com.example.mytraya2;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.fragment.app.FragmentManager;
-
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +20,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import top.defaults.colorpicker.ColorPickerPopup;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    String nombre1, nombre2, nombrepartida;
     TextView titulo, punt1, punt2, name1, name2, mark1, mark2; // titulo superior, puntuaciones y nombres
     ImageButton b11,b12,b13,b21,b22,b23,b31,b32,b33; // casillas del tablero
     Button b1, b2, b3; // botones inferiores
@@ -32,13 +36,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<int[]> check; // lista donde estan las combinaciones ganadoras
     ArrayList<Integer> jug1, jug2; // listas donde se almacenan las casillas de cada jugador
     int[] jug = {0,1,2}; // lista para controlar a quien pertenecen las casillas, 0=no usada, 1=j1, 2=j2
-    int rojo, azul, verde;
+    int rojo, azul, verde, color_j1, color_j2;
+    LinearLayout lly;
+    AnimationDrawable ad;
 
 
-    // TODO un pequeño marcador para ver a quien le toca HECHO, SE PUEDE MEJORAR
-    // TODO pdoer editar los nombres
-    // TODO poder editar los colores
-    // TODO habilitar la opcion de rendirse, la veo innecesaria, las partidas duran segundos
+    // TODO un pequeño marcador para ver a quien le toca HECHO, SE PUEDE MEJORAR, NO HACE FALTA MAS
+    // TODO corregir el tema de los colores en la puntuacion y el nombre
+    // TODO corregir el tema del cambio de color a mitad de partida, los botones se quedan del color anterior
+    // TODO añadir un layout directamente para la splash screen, corregir el mainfest
     // TODO maquillar la app con mejoras de diseño y de animaciones, añadir sonidos?
     // TODO trabajar el online
 
@@ -69,43 +75,90 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             restartMatch();
         });
 
-        name1.setOnClickListener(this::showChangename);
+        name1.setOnClickListener(view1 -> showChangename(view1, 1));
 
-        name2.setOnClickListener(this::showChangename);
+        name2.setOnClickListener(view -> showChangename(view, 2));
+
+        titulo.setOnClickListener(view -> showChangename(view, 3));
+
+        punt1.setOnClickListener(view -> showColorPicker(1));
+
+        punt2.setOnClickListener(view -> showColorPicker(2));
+    }
+
+    private void showColorPicker(int i) {
+
+        new ColorPickerPopup.Builder(MainActivity.this).initialColor(
+                Color.RED)
+                .enableBrightness(true)
+                .enableAlpha(true)
+                .okTitle("Choose")
+                .cancelTitle("Cancel")
+                .showIndicator(true)
+                .showValue(true)
+                .build()
+                .show(new ColorPickerPopup.ColorPickerObserver() {
+                    @Override
+                    public void onColorPicked(int color) {
+                        if (i==1){
+                            color_j1 = color;
+                            mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
+                            punt1.setTextColor(color_j1);
+                        }else if (i==2){
+                            color_j2 = color;
+                            mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
+                            punt2.setTextColor(color_j2);
+                        }
+
+                    }
+                });
     }
 
     private void preMatch() {
-        name1.setText("VERDE");
-        name2.setText("ROJO");
+        name1.setText(nombre1);
+        name2.setText(nombre2);
 
-        b1.setText("ONLINE");
+        name1.setTextColor(color_j1);
+        name2.setTextColor(color_j2);
 
-        mark1.setBackgroundTintList(ColorStateList.valueOf(verde));
-        mark2.setBackgroundTintList(ColorStateList.valueOf(rojo));
+        titulo.setText(nombrepartida);
+
+        b1.setText(R.string.online);
+
+        mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
+        mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
+
+        mark1.setVisibility(View.INVISIBLE);
+        mark2.setVisibility(View.INVISIBLE);
     }
 
-    private void showChangename(View view) {
+    private void showChangename(View view, int i2) {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
         TextView tv = (TextView) view;
-        alert.setTitle("What's Your name?");
-        alert.setMessage("Seems like you're new here! What's your name?");
+        alert.setTitle("Cambiar el nombre");
+        alert.setMessage("Pon el nombre que quieras usar ahora");
 
         // Set an EditText view to get user input
         final EditText input = new EditText(MainActivity.this);
+        input.setText(String.valueOf(tv.getText()));
+        input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(13)});
         alert.setView(input);
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                String newText = input.getText().toString();
-                tv.setText(newText);
+        alert.setPositiveButton("Ok", (dialog, whichButton) -> {
+            String newText = input.getText().toString();
+            tv.setText(newText);
+            if (i2==1){
+                nombre1 = newText;
+            }else if (i2 == 2){
+                nombre2 = newText;
+            }else if (i2 == 3){
+                nombrepartida = newText;
             }
         });
 
         alert.create().show();
     }
-
-
 
     private void startMatch() {
 
@@ -118,12 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         check = putSoluciones(check);
 
         botones = new ArrayList<>(Arrays.asList(b11,b12,b13,b21,b22,b23,b31,b32,b33));
-        titulo.setText(R.string.prueba2);
 
         states_btns = putMapStates(botones, states_btns);
-
-        mark1.setVisibility(View.INVISIBLE);
-        mark2.setVisibility(View.INVISIBLE);
 
     }
 
@@ -159,10 +208,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (aux2[1] == jug[0]){
             if (turno){
-                v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_check)));
+                v.setBackgroundTintList(ColorStateList.valueOf(color_j1));
+                //v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_check)));
                 aux2[1] = jug[1];
             }else{
-                v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_check)));
+                v.setBackgroundTintList(ColorStateList.valueOf(color_j2));
+                //v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_check)));
                 aux2[1] = jug[2];
             }
             states_btns.put((Integer) v.getTag(),aux2);
@@ -252,6 +303,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void declaraciones() {
 
+        lly = findViewById(R.id.layout_master);
+
+        ad = (AnimationDrawable) lly.getBackground();
+        ad.setEnterFadeDuration(10);
+        ad.setExitFadeDuration(2000);
+        ad.start();
+
         titulo = findViewById(R.id.text_titulo);
 
         punt1 = findViewById(R.id.punt1);
@@ -260,12 +318,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         name1 = findViewById(R.id.name1);
         name2 = findViewById(R.id.name2);
 
+        nombre1 = "J1";
+        nombre2 = "J2";
+
+        nombrepartida = String.valueOf(R.string.prueba);
+
         mark1 = findViewById(R.id.mark1);
         mark2 = findViewById(R.id.mark2);
 
         azul = getResources().getColor(R.color.blue_start);
         rojo = getResources().getColor(R.color.red_check);
         verde = getResources().getColor(R.color.green_check);
+
+        color_j1 = verde;
+        color_j2 = rojo;
 
         b11 = findViewById(R.id.btn_arriba_izq);
         b12 = findViewById(R.id.btn_arriba_ctr);
@@ -296,4 +362,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return ch;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(ad!=null) {
+            if (!ad.isRunning()) {
+                ad.start();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(ad!=null) {
+            super.onPause();
+            if (ad.isRunning()) {
+                ad.stop();
+            }
+        }
+    }
 }

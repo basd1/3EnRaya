@@ -40,11 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout lly;
     AnimationDrawable ad;
 
-
-    // TODO un pequeño marcador para ver a quien le toca HECHO, SE PUEDE MEJORAR, NO HACE FALTA MAS
-    // TODO corregir el tema de los colores en la puntuacion y el nombre
-    // TODO corregir el tema del cambio de color a mitad de partida, los botones se quedan del color anterior
-    // TODO añadir un layout directamente para la splash screen, corregir el mainfest
     // TODO maquillar la app con mejoras de diseño y de animaciones, añadir sonidos?
     // TODO trabajar el online
 
@@ -70,10 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         });
 
-        b3.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Has pulsado el botón derecho", Toast.LENGTH_SHORT).show();
-            restartMatch();
-        });
+        b3.setOnClickListener(view -> restartMatch());
 
         name1.setOnClickListener(view1 -> showChangename(view1, 1));
 
@@ -88,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showColorPicker(int i) {
 
-        new ColorPickerPopup.Builder(MainActivity.this).initialColor(
-                Color.RED)
+        new ColorPickerPopup.Builder(MainActivity.this).initialColor(Color.RED)
                 .enableBrightness(true)
                 .enableAlpha(true)
                 .okTitle("Choose")
@@ -103,13 +94,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (i==1){
                             color_j1 = color;
                             mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                            punt1.setTextColor(color_j1);
+                            name1.setTextColor(color_j1);
+
                         }else if (i==2){
                             color_j2 = color;
                             mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                            punt2.setTextColor(color_j2);
+                            name2.setTextColor(color_j2);
                         }
-
+                        for (ImageButton ib2 : botones){
+                            for (Integer key : states_btns.keySet()){
+                                Log.e("X","La key de esto es "+key);
+                                Log.e("X","El tag de esto es "+ib2.getTag());
+                                if (ib2.getTag() == key){
+                                    int[] aux4 = states_btns.get(key);
+                                    if (aux4[1] == 1){
+                                        ib2.setBackgroundTintList(ColorStateList.valueOf(color_j1));
+                                    }else if (aux4[1] == 2){
+                                        ib2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
+                                    }
+                                }
+                            }
+                        }
                     }
                 });
     }
@@ -209,11 +214,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (aux2[1] == jug[0]){
             if (turno){
                 v.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                //v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_check)));
                 aux2[1] = jug[1];
             }else{
                 v.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                //v.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_check)));
                 aux2[1] = jug[2];
             }
             states_btns.put((Integer) v.getTag(),aux2);
@@ -321,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nombre1 = "J1";
         nombre2 = "J2";
 
-        nombrepartida = String.valueOf(R.string.prueba);
+        nombrepartida = getString(R.string.prueba);
 
         mark1 = findViewById(R.id.mark1);
         mark2 = findViewById(R.id.mark2);

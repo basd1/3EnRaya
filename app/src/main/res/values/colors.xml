@@ -10,8 +10,13 @@
     <color name="blue_start">#03A9F4</color>
     <color name="green_check">#2AB330</color>
     <color name="red_check">#9F0000</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="orange">#FF9800</color>
     <color name="transparente">#00000000</color>
-    <color name="g1">#010104</color>
-    <color name="g2">#415259</color>
-    <color name="g3">#52878E</color>
+    <color name="g1">#0094cc</color>
+    <color name="g2">#536DFE</color>
+    <color name="g3">#82f7ff</color>
+
+    <color name="s1">#0094cc</color>
+    <color name="s2">#82f7ff</color>
 </resources>

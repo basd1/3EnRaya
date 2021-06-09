@@ -40,15 +40,23 @@
     <style name="Base.TextAppearance.AppCompat.Widget.Button.linea_botones" parent="TextAppearance.AppCompat.Widget.Button">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="color">#384343</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="backgroundTint">#212121</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:layout_margin">7dp</item>
+        <item name="fontFamily">@font/audiowide</item>
     </style>
 
-    <style name="myDialog" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        ...
+    <style name="Widget.AppCompat.TextView.winner" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginBottom">125dp</item>
+        <item name="fontFamily">@font/bangers</item>
+        <item name="android:textSize">80sp</item>
+        <item name="android:text">@string/prueba</item>
     </style>
+
 </resources>

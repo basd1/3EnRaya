@@ -9,4 +9,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="online">ONLINE</string>
+    <string name="local">1VS1</string>
+    <string name="incognita">...</string>
+    <string name="creditos">Hecho por Bas O. 2021. Tres en raya TicTacToe</string>
 </resources>

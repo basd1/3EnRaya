@@ -15,7 +15,7 @@ public class Intro_screen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Log.e("X","Pasa por la intro");
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MenuScreen.class);
         Handler h = new Handler();
         h.postDelayed(() -> {
             startActivity(intent);

@@ -97,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getResources().getColor(R.color.teal_700),
         getResources().getColor(R.color.purple_200),
         getResources().getColor(R.color.yellow),
+        getResources().getColor(R.color.azul_oscuro),
+        getResources().getColor(R.color.gris),
+        getResources().getColor(R.color.rosa),
+        getResources().getColor(R.color.verde_oscuro),
         Color.WHITE};
 
         new ColorSheet().colorPicker(colors, null, false, new Function1<Integer, Unit>() {
@@ -130,43 +134,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).show(getSupportFragmentManager());
 
-        /*new ColorPickerPopup.Builder(MainActivity.this).initialColor(Color.RED)
-                .enableBrightness(true)
-                .enableAlpha(true)
-                .okTitle("Escoger")
-                .cancelTitle("Cancelar")
-                .showIndicator(true)
-                .showValue(false)
-                .build()
-                .show(new ColorPickerPopup.ColorPickerObserver() {
-                    @Override
-                    public void onColorPicked(int color) {
-                        if (i==1){
-                            color_j1 = color;
-                            mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                            name1.setTextColor(color_j1);
-
-                        }else if (i==2){
-                            color_j2 = color;
-                            mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                            name2.setTextColor(color_j2);
-                        }
-                        for (ImageButton ib2 : botones){
-                            for (Integer key : states_btns.keySet()){
-                                Log.e("X","La key de esto es "+key);
-                                Log.e("X","El tag de esto es "+ib2.getTag());
-                                if (ib2.getTag() == key){
-                                    int[] aux4 = states_btns.get(key);
-                                    if (aux4[1] == 1){
-                                        ib2.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                                    }else if (aux4[1] == 2){
-                                        ib2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });*/
     }
 
     private void preMatch() {

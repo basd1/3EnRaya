@@ -12,6 +12,10 @@
     <color name="red_check">#9F0000</color>
     <color name="yellow">#FFEB3B</color>
     <color name="orange">#FF9800</color>
+    <color name="azul_oscuro">#001C65</color>
+    <color name="rosa">#ED66F6</color>
+    <color name="verde_oscuro">#034707</color>
+    <color name="gris">#393939</color>
     <color name="transparente">#00000000</color>
     <color name="g1">#0094cc</color>
     <color name="g2">#536DFE</color>

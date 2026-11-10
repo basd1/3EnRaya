@@ -1,15 +1,25 @@
 package com.bastianorellana.tresenraya;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 public class MenuActivity extends AppCompatActivity {
 
+    /** Tiempo mínimo que se ve el logo al abrir la app en frío. */
+    private static final long DURACION_MINIMA_SPLASH_MS = 800;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen splash = SplashScreen.installSplashScreen(this);
+        if (savedInstanceState == null) {
+            long fin = SystemClock.uptimeMillis() + DURACION_MINIMA_SPLASH_MS;
+            splash.setKeepOnScreenCondition(() -> SystemClock.uptimeMillis() < fin);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         Pantalla.configurar(this, findViewById(R.id.menu_root));

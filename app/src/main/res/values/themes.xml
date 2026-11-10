@@ -10,6 +10,13 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!-- Splash de arranque (API nativa en Android 12+, compatible hacia atrás) -->
+    <style name="Theme.TresEnRaya.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_icono</item>
+        <item name="postSplashScreenTheme">@style/Theme.TresEnRaya</item>
+    </style>
+
     <!-- Menú principal -->
     <style name="BotonMenu" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/g3</item>

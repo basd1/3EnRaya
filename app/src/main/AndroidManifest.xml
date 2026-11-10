@@ -10,7 +10,8 @@
         android:theme="@style/Theme.TresEnRaya">
         <activity
             android:name=".MenuActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.TresEnRaya.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

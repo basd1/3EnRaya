@@ -45,6 +45,25 @@ public class TableroTest {
     }
 
     @Test
+    public void lineaGanadora_devuelveLasTresCasillas() {
+        assertEquals(null, t.lineaGanadora());
+        t.jugar(2, Tablero.J1);
+        t.jugar(4, Tablero.J1);
+        t.jugar(6, Tablero.J1);
+        assertArrayEquals(new int[]{2, 4, 6}, t.lineaGanadora());
+        assertTrue(t.terminado());
+    }
+
+    @Test
+    public void copia_esIndependiente() {
+        t.jugar(0, Tablero.J1);
+        Tablero c = t.copia();
+        c.jugar(1, Tablero.J2);
+        assertEquals(Tablero.VACIA, t.get(1));
+        assertEquals(8, t.casillasLibres().size());
+    }
+
+    @Test
     public void lineaMixta_noGana() {
         t.jugar(0, Tablero.J1);
         t.jugar(1, Tablero.J2);

@@ -3,7 +3,7 @@ plugins {
 }
 
 // Firma de release opcional: se lee de keystore.properties (local, fuera de git)
-// o de variables de entorno (CI). Sin ella, el APK de release sale sin firmar.
+// o de variables de entorno SIGNING_*. Sin ella, el APK de release sale sin firmar.
 def keystoreProps = new Properties()
 def keystoreFile = rootProject.file('keystore.properties')
 if (keystoreFile.exists()) {

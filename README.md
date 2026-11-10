@@ -116,13 +116,9 @@ Requisitos: JDK 17 o superior y el SDK de Android (plataforma 36).
 ./gradlew assembleRelease    # minificado con R8 y recorte de recursos
 ```
 
-### Releases firmadas
+### Firmar el APK de release
 
-Al subir una etiqueta como `v2.0.0` se lanza el [workflow de release](.github/workflows/release.yml),
-que compila un APK firmado y lo adjunta a una GitHub Release. Necesita estos secrets en el repositorio:
-`SIGNING_KEYSTORE_BASE64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS` y `SIGNING_KEY_PASSWORD`.
-
-Para firmar en local, crea un archivo `keystore.properties` (ignorado por git) en la raíz del proyecto:
+Crea un archivo `keystore.properties` (ignorado por git) en la raíz del proyecto:
 
 ```properties
 storeFile=release.jks
@@ -134,7 +130,7 @@ keyPassword=…
 ## Tecnologías
 
 Java 17 · Android Views · AndroidX Lifecycle (ViewModel, LiveData, SavedStateHandle) ·
-Material Components · API de SplashScreen · R8 · JUnit 4 · Espresso · GitHub Actions
+Material Components · API de SplashScreen · R8 · JUnit 4 · Espresso
 
 Librerías: [Konfetti](https://github.com/DanielMartinus/Konfetti) (confeti),
 [ColorSheet](https://github.com/msasikanth/ColorSheet) (selector de color).

@@ -5,7 +5,7 @@
 <h1 align="center">Tres en Raya</h1>
 
 <p align="center">
-  Tres en raya nativo para Android en <b>Java</b>: modo de dos jugadores, una <b>IA imbatible con minimax</b>,
+  Tres en raya nativo para Android en <b>Java</b>, de <b>2021</b>: modo de dos jugadores, una <b>IA imbatible con minimax</b>,
   animaciones y una arquitectura MVVM totalmente testeada.
 </p>
 
@@ -142,4 +142,4 @@ Fuentes: Bangers y Audiowide (Google Fonts, licencia SIL Open Font License).
 
 ---
 
-Hecho por Bas O.
+Proyecto de 2021. Hecho por Bastian Orellana.

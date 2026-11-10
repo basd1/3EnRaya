@@ -1,0 +1,8 @@
+# Finales de línea coherentes entre Windows y el CI (Linux)
+* text=auto
+gradlew text eol=lf
+*.bat text eol=crlf
+*.png binary
+*.gif binary
+*.jar binary
+*.ttf binary

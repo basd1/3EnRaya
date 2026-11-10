@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="docs/icono.png" width="96" alt="App icon">
+  <img src="docs/icono.png" width="96" alt="Icono de la app">
 </p>
 
-<h1 align="center">Tres en Raya · Tic Tac Toe</h1>
+<h1 align="center">Tres en Raya</h1>
 
 <p align="center">
-  Native Android tic-tac-toe in <b>Java</b>: local two-player mode, an <b>unbeatable minimax AI</b>,
-  animations and a fully tested MVVM architecture.
+  Tres en raya nativo para Android en <b>Java</b>: modo de dos jugadores, una <b>IA imbatible con minimax</b>,
+  animaciones y una arquitectura MVVM totalmente testeada.
 </p>
 
 <p align="center">
@@ -17,42 +17,43 @@
 </p>
 
 <p align="center">
-  <img src="docs/demo.gif" width="300" alt="Gameplay: a two-player win and a game against the AI">
+  <img src="docs/demo.gif" width="300" alt="Partida a dos jugadores y partida contra la IA">
 </p>
 
-## Features
+## Funcionalidades
 
-- **Two game modes**: 1 vs 1 on the same device, or against the AI with three difficulty levels.
-- **Unbeatable AI**: the hard level uses a full minimax search that prefers quick wins and slow losses,
-  and picks randomly among equally good moves so games don't repeat. A unit test plays *every possible
-  game* against it and checks that it never loses.
-- **Animated winning line** drawn by a custom `View`, losing squares dimmed, confetti and a blinking
-  *WINNER* banner.
-- **Feel**: pop-in animation for each piece, shake + haptic feedback on an occupied square, animated
-  gradient background.
-- **Customisable**: tap a name or the title to rename it, tap a score to pick the player's colour.
-  Names, colours and scores are saved per mode between sessions.
-- **Survives everything**: rotation, multi-window and process death (state lives in a `ViewModel`
-  backed by `SavedStateHandle`).
-- **Adaptive layouts**: the board is always square; dedicated portrait and landscape layouts for
-  phones and tablets.
-- **Modern platform integration**: SplashScreen API, edge-to-edge (mandatory from Android 15),
-  adaptive launcher icon with a monochrome layer for themed icons.
-- **Accessible and localised**: every square has a TalkBack description ("Row 2, column 3: P1"),
-  plurals, Spanish and English.
+- **Dos modos de juego**: 1 contra 1 en el mismo dispositivo, o contra la IA con tres niveles de dificultad.
+- **IA imbatible**: el nivel difícil usa una búsqueda minimax completa que prefiere ganar cuanto antes
+  y perder lo más tarde posible, y elige al azar entre jugadas igual de buenas para que las partidas no
+  se repitan. Un test unitario juega *todas las partidas posibles* contra ella y comprueba que nunca pierde.
+- **Raya ganadora animada**, dibujada con una `View` propia, casillas perdedoras atenuadas, confeti y un
+  cartel *WINNER* parpadeante.
+- **Sensaciones**: cada ficha aparece con un pequeño rebote, la casilla ocupada tiembla y vibra, y el
+  fondo es un degradado animado.
+- **Personalizable**: pulsa un nombre o el título para cambiarlo y pulsa una puntuación para elegir el
+  color del jugador. Nombres, colores y marcador se guardan entre sesiones, por modo de juego.
+- **Aguanta todo**: giros de pantalla, multiventana y que el sistema mate el proceso (el estado vive en
+  un `ViewModel` respaldado por `SavedStateHandle`).
+- **Diseño adaptable**: el tablero siempre es cuadrado, con layouts específicos para vertical y
+  horizontal en móviles y tablets.
+- **Integración con el sistema actual**: API de SplashScreen, pantalla edge-to-edge (obligatoria desde
+  Android 15) e icono adaptativo con capa monocroma para los iconos temáticos.
+- **Accesible y traducida**: cada casilla tiene descripción para TalkBack ("Fila 2, columna 3: J1"),
+  plurales, y textos en español e inglés.
 
 <p align="center">
-  <img src="docs/menu.png" width="220" alt="Main menu">
+  <img src="docs/menu.png" width="220" alt="Menú principal">
   &nbsp;
-  <img src="docs/victoria.png" width="220" alt="Win celebration">
+  <img src="docs/victoria.png" width="220" alt="Celebración de victoria">
 </p>
 <p align="center">
-  <img src="docs/horizontal.png" width="460" alt="Landscape layout">
+  <img src="docs/horizontal.png" width="460" alt="Diseño en horizontal">
 </p>
 
-## Architecture
+## Arquitectura
 
-MVVM with a framework-free game core, so the rules and the AI are tested on the JVM in milliseconds.
+MVVM con el núcleo del juego libre de dependencias de Android, así las reglas y la IA se testean en la
+JVM en milisegundos.
 
 ```mermaid
 flowchart LR
@@ -61,21 +62,21 @@ flowchart LR
         LV[LineaGanadoraView]
         CC[ContenedorCuadrado]
     end
-    subgraph VM["Presentation"]
+    subgraph VM["Presentación"]
         VMG[GameViewModel]
-        EP[(EstadoPartida<br/>immutable state)]
-        EV[(Evento<br/>one-shot events)]
+        EP[(EstadoPartida<br/>estado inmutable)]
+        EV[(Evento<br/>eventos puntuales)]
     end
-    subgraph Core["Game core · pure Java"]
-        T[Tablero<br/>board + rules]
+    subgraph Core["Núcleo del juego · Java puro"]
+        T[Tablero<br/>tablero + reglas]
         IA[Ia<br/>minimax]
     end
-    subgraph Data
+    subgraph Datos
         AP[AlmacenPartida<br/>SharedPreferences]
         SSH[SavedStateHandle]
     end
 
-    GA -- user actions --> VMG
+    GA -- acciones del usuario --> VMG
     VMG -- LiveData --> EP --> GA
     VMG -- LiveData --> EV --> GA
     GA --> LV & CC
@@ -83,48 +84,49 @@ flowchart LR
     VMG --> AP & SSH
 ```
 
-| Class | Responsibility |
+| Clase | Responsabilidad |
 | --- | --- |
-| [`Tablero`](app/src/main/java/com/bastianorellana/tresenraya/Tablero.java) | Board state, moves, winner and winning line. No Android dependencies. |
-| [`Ia`](app/src/main/java/com/bastianorellana/tresenraya/Ia.java) | Easy (random), medium (win → block → centre) and hard (minimax). |
-| [`GameViewModel`](app/src/main/java/com/bastianorellana/tresenraya/GameViewModel.java) | Game flow, turns, scores, AI scheduling. Publishes an immutable `EstadoPartida`. |
-| [`GameActivity`](app/src/main/java/com/bastianorellana/tresenraya/GameActivity.java) | Renders the state and reacts to one-shot events (animations, haptics, celebration). |
-| [`LineaGanadoraView`](app/src/main/java/com/bastianorellana/tresenraya/LineaGanadoraView.java) | Custom view that animates the line across the three winning squares. |
-| [`Programador`](app/src/main/java/com/bastianorellana/tresenraya/Programador.java) | Delayed-task abstraction so the AI "thinking" delay is testable without a `Looper`. |
+| [`Tablero`](app/src/main/java/com/bastianorellana/tresenraya/Tablero.java) | Estado del tablero, jugadas, ganador y línea ganadora. Sin dependencias de Android. |
+| [`Ia`](app/src/main/java/com/bastianorellana/tresenraya/Ia.java) | Fácil (al azar), media (ganar → bloquear → centro) y difícil (minimax). |
+| [`GameViewModel`](app/src/main/java/com/bastianorellana/tresenraya/GameViewModel.java) | Flujo de la partida, turnos, marcador y turno de la IA. Publica un `EstadoPartida` inmutable. |
+| [`GameActivity`](app/src/main/java/com/bastianorellana/tresenraya/GameActivity.java) | Pinta el estado y reacciona a los eventos puntuales (animaciones, vibración, celebración). |
+| [`LineaGanadoraView`](app/src/main/java/com/bastianorellana/tresenraya/LineaGanadoraView.java) | Vista propia que anima la raya sobre las tres casillas ganadoras. |
+| [`Programador`](app/src/main/java/com/bastianorellana/tresenraya/Programador.java) | Abstracción de tareas con retraso para poder testear la "pausa para pensar" de la IA sin `Looper`. |
 
-## Testing
+## Tests
 
 ```bash
-./gradlew testDebugUnitTest          # 28 JVM tests: board, AI and ViewModel
-./gradlew connectedDebugAndroidTest  # Espresso tests that play real games on a device/emulator
+./gradlew testDebugUnitTest          # 28 tests en la JVM: tablero, IA y ViewModel
+./gradlew connectedDebugAndroidTest  # Tests de Espresso que juegan partidas reales en un dispositivo o emulador
 ```
 
-- **`IaTest`** walks the whole game tree (the AI moving first and second) and asserts the hard AI
-  never loses.
-- **`GameViewModelTest`** covers wins, draws, occupied squares, score persistence, process-death
-  restoration and the AI turn using a manual scheduler.
-- **`GameActivityTest`** (Espresso) plays a full game through the UI and checks the score, the winner
-  banner, the accessibility descriptions and persistence across launches.
+- **`IaTest`** recorre el árbol de juego completo (empezando la IA y empezando el rival) y comprueba que
+  la IA difícil nunca pierde.
+- **`GameViewModelTest`** cubre victorias, empates, casillas ocupadas, persistencia del marcador,
+  recuperación tras matar el proceso y el turno de la IA con un programador manual.
+- **`GameActivityTest`** (Espresso) juega una partida completa desde la interfaz y comprueba el
+  marcador, el cartel del ganador, las descripciones de accesibilidad y que el marcador se conserva al
+  volver a entrar.
 
-CI runs lint, unit tests and the Espresso suite on an emulator for every push
+El CI ejecuta lint, los tests unitarios y los de Espresso en un emulador en cada push
 ([workflow](.github/workflows/ci.yml)).
 
-## Building
+## Compilar
 
-Requirements: JDK 17+ and the Android SDK (platform 36).
+Requisitos: JDK 17 o superior y el SDK de Android (plataforma 36).
 
 ```bash
 ./gradlew assembleDebug      # app/build/outputs/apk/debug/app-debug.apk
-./gradlew assembleRelease    # minified with R8 and resource shrinking
+./gradlew assembleRelease    # minificado con R8 y recorte de recursos
 ```
 
-### Signed releases
+### Releases firmadas
 
-Pushing a tag like `v2.0.0` triggers the [release workflow](.github/workflows/release.yml), which
-builds a signed APK and attaches it to a GitHub Release. It needs these repository secrets:
-`SIGNING_KEYSTORE_BASE64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS`, `SIGNING_KEY_PASSWORD`.
+Al subir una etiqueta como `v2.0.0` se lanza el [workflow de release](.github/workflows/release.yml),
+que compila un APK firmado y lo adjunta a una GitHub Release. Necesita estos secrets en el repositorio:
+`SIGNING_KEYSTORE_BASE64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS` y `SIGNING_KEY_PASSWORD`.
 
-For local signed builds, create a `keystore.properties` file (ignored by git) in the project root:
+Para firmar en local, crea un archivo `keystore.properties` (ignorado por git) en la raíz del proyecto:
 
 ```properties
 storeFile=release.jks
@@ -133,19 +135,19 @@ keyAlias=…
 keyPassword=…
 ```
 
-## Tech stack
+## Tecnologías
 
 Java 17 · Android Views · AndroidX Lifecycle (ViewModel, LiveData, SavedStateHandle) ·
-Material Components · SplashScreen API · R8 · JUnit 4 · Espresso · GitHub Actions
+Material Components · API de SplashScreen · R8 · JUnit 4 · Espresso · GitHub Actions
 
-Libraries: [Konfetti](https://github.com/DanielMartinus/Konfetti) (confetti),
-[ColorSheet](https://github.com/msasikanth/ColorSheet) (colour picker).
-Fonts: Bangers and Audiowide (Google Fonts, SIL Open Font License).
+Librerías: [Konfetti](https://github.com/DanielMartinus/Konfetti) (confeti),
+[ColorSheet](https://github.com/msasikanth/ColorSheet) (selector de color).
+Fuentes: Bangers y Audiowide (Google Fonts, licencia SIL Open Font License).
 
-## Roadmap
+## Próximamente
 
-- [ ] Online multiplayer
+- [ ] Multijugador online
 
 ---
 
-Made by Bas O.
+Hecho por Bas O.

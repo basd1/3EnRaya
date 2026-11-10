@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Tablero 3x3 siempre cuadrado, con la raya ganadora dibujada encima -->
+<!-- Las descripciones de las casillas se ponen en código según su contenido -->
 <com.bastianorellana.tresenraya.ContenedorCuadrado xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tablero_contenedor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    tools:ignore="ContentDescription">
 
     <LinearLayout
         android:id="@+id/tabla_juego"

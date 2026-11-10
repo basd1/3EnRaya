@@ -198,8 +198,8 @@ public class GameActivity extends AppCompatActivity {
 
         name1.setContentDescription(getString(R.string.nombre_descripcion, d.nombre1));
         name2.setContentDescription(getString(R.string.nombre_descripcion, d.nombre2));
-        punt1.setContentDescription(getString(R.string.puntuacion_descripcion, d.nombre1, d.puntos1));
-        punt2.setContentDescription(getString(R.string.puntuacion_descripcion, d.nombre2, d.puntos2));
+        punt1.setContentDescription(getResources().getQuantityString(R.plurals.puntuacion_descripcion, d.puntos1, d.nombre1, d.puntos1));
+        punt2.setContentDescription(getResources().getQuantityString(R.plurals.puntuacion_descripcion, d.puntos2, d.nombre2, d.puntos2));
 
         mark1.setBackgroundTintList(ColorStateList.valueOf(d.color1));
         mark2.setBackgroundTintList(ColorStateList.valueOf(d.color2));

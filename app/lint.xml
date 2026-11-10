@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Los textos por defecto están en español; el corrector de lint es en inglés -->
+    <issue id="Typos" severity="ignore" />
+    <!-- ic_launcher e ic_launcher_round son iguales a propósito (icono redondo en ambos) -->
+    <issue id="IconDuplicates" severity="ignore" />
+</lint>

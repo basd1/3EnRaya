@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Tic Tac Toe</string>
+    <string name="creditos">Made by Bas O. · Tic Tac Toe</string>
+
+    <!-- Menu -->
+    <string name="local">1VS1</string>
+    <string name="contra_ia">VS AI</string>
+    <string name="online">ONLINE</string>
+    <string name="online_no_disponible">Online mode is coming soon</string>
+    <string name="elegir_dificultad">Choose the difficulty</string>
+    <string name="dificultad_facil">Easy</string>
+    <string name="dificultad_media">Medium</string>
+    <string name="dificultad_dificil">Hard (unbeatable)</string>
+
+    <!-- Game -->
+    <string name="titulo_partida">Tic Tac Toe</string>
+    <string name="titulo_partida_ia">Versus the AI</string>
+    <string name="nombre_j1">P1</string>
+    <string name="nombre_j2">P2</string>
+    <string name="nombre_ia">AI</string>
+    <string name="menu">MENU</string>
+    <string name="restart">RESTART</string>
+    <string name="otra">AGAIN</string>
+    <string name="ganador">WINNER\n%1$s</string>
+    <string name="gana_jugador">%1$s wins</string>
+    <string name="empate">It\'s a draw!</string>
+    <string name="casilla_ocupada">Play on another square</string>
+    <string name="ia_pensando">The AI is thinking…</string>
+
+    <!-- Dialogs -->
+    <string name="cambiar_nombre_titulo">Change name</string>
+    <string name="cambiar_nombre_mensaje">Type the name you want to use</string>
+    <string name="ok">OK</string>
+    <string name="cancelar">Cancel</string>
+
+    <!-- Accessibility -->
+    <string name="casilla_descripcion">Row %1$d, column %2$d: %3$s</string>
+    <string name="casilla_vacia">empty</string>
+    <string name="turno_de">%1$s\'s turn</string>
+    <plurals name="puntuacion_descripcion">
+        <item quantity="one">%1$s: %2$d point. Tap to change the colour</item>
+        <item quantity="other">%1$s: %2$d points. Tap to change the colour</item>
+    </plurals>
+    <string name="nombre_descripcion">%1$s. Tap to change the name</string>
+</resources>

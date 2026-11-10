@@ -30,13 +30,16 @@
     <!-- Diálogos -->
     <string name="cambiar_nombre_titulo">Cambiar el nombre</string>
     <string name="cambiar_nombre_mensaje">Pon el nombre que quieras usar ahora</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancelar">Cancelar</string>
 
     <!-- Accesibilidad -->
     <string name="casilla_descripcion">Fila %1$d, columna %2$d: %3$s</string>
     <string name="casilla_vacia">vacía</string>
     <string name="turno_de">Turno de %1$s</string>
-    <string name="puntuacion_descripcion">%1$s: %2$d puntos. Pulsa para cambiar el color</string>
+    <plurals name="puntuacion_descripcion">
+        <item quantity="one">%1$s: %2$d punto. Pulsa para cambiar el color</item>
+        <item quantity="other">%1$s: %2$d puntos. Pulsa para cambiar el color</item>
+    </plurals>
     <string name="nombre_descripcion">%1$s. Pulsa para cambiar el nombre</string>
 </resources>

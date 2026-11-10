@@ -1,27 +1,42 @@
 <resources>
-    <string name="app_name">MiTresEnRaya</string>
-    <string name="prueba">Prueba</string>
-    <string name="rendirse">RENDIRSE</string>
-    <string name="chat">CHAT</string>
-    <string name="prueba_num">0</string>
-    <string name="prueba2">Partida de prueba</string>
-    <string name="otra">OTRA</string>
-    <string name="restart">RESTART</string>
-    <string name="online">ONLINE</string>
-    <string name="local">1VS1</string>
-    <string name="incognita">...</string>
-    <string name="creditos">Hecho por Bas O. 2021. Tres en raya TicTacToe</string>
+    <string name="app_name">Tres en Raya</string>
+    <string name="creditos">Hecho por Bas O. · Tres en raya</string>
 
+    <!-- Menú -->
+    <string name="local">1VS1</string>
+    <string name="contra_ia">VS IA</string>
+    <string name="online">ONLINE</string>
+    <string name="online_no_disponible">El modo online llegará pronto</string>
+    <string name="elegir_dificultad">Elige la dificultad</string>
+    <string name="dificultad_facil">Fácil</string>
+    <string name="dificultad_media">Media</string>
+    <string name="dificultad_dificil">Difícil (imbatible)</string>
+
+    <!-- Partida -->
+    <string name="titulo_partida">Tres en raya</string>
+    <string name="titulo_partida_ia">Contra la IA</string>
     <string name="nombre_j1">J1</string>
     <string name="nombre_j2">J2</string>
+    <string name="nombre_ia">IA</string>
+    <string name="menu">MENÚ</string>
+    <string name="restart">RESTART</string>
+    <string name="otra">OTRA</string>
     <string name="ganador">WINNER\n%1$s</string>
     <string name="gana_jugador">Gana %1$s</string>
     <string name="empate">¡Empate!</string>
     <string name="casilla_ocupada">Juega en otra casilla</string>
-    <string name="online_no_disponible">El modo online aún no está disponible</string>
-    <string name="opcion_no_disponible">Esta opción aún no está disponible</string>
+    <string name="ia_pensando">La IA está pensando…</string>
+
+    <!-- Diálogos -->
     <string name="cambiar_nombre_titulo">Cambiar el nombre</string>
     <string name="cambiar_nombre_mensaje">Pon el nombre que quieras usar ahora</string>
     <string name="ok">Ok</string>
     <string name="cancelar">Cancelar</string>
+
+    <!-- Accesibilidad -->
+    <string name="casilla_descripcion">Fila %1$d, columna %2$d: %3$s</string>
+    <string name="casilla_vacia">vacía</string>
+    <string name="turno_de">Turno de %1$s</string>
+    <string name="puntuacion_descripcion">%1$s: %2$d puntos. Pulsa para cambiar el color</string>
+    <string name="nombre_descripcion">%1$s. Pulsa para cambiar el nombre</string>
 </resources>

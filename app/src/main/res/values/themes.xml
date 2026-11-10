@@ -1,38 +1,22 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.MyTraya2" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
+<resources>
+
+    <style name="Theme.TresEnRaya" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
-
-    <style name="Theme.MyTraya2.dos" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-
         <item name="android:windowFullscreen">true</item>
     </style>
 
-
-    <style name="Base.TextAppearance.AppCompat.Widget.Button.elecciones" parent="Base.TextAppearance.AppCompat.Widget.Button">
+    <!-- Menú principal -->
+    <style name="BotonMenu" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/g3</item>
         <item name="fontFamily">@font/bangers</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/azul_oscuro</item>
-        <item name="android:layout_width">155dp</item>
+        <item name="android:layout_width">170dp</item>
         <item name="android:layout_height">85dp</item>
         <item name="android:textSize">28sp</item>
         <item name="android:shadowColor">@color/white</item>
@@ -43,50 +27,110 @@
         <item name="strokeWidth">2dp</item>
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:layout_gravity">center</item>
-
-
-
     </style>
 
-    <style name="Widget.AppCompat.ImageButton.btn_prove" parent="Widget.AppCompat.ImageButton">
-        <item name="android:layout_height">110sp</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:src">@drawable/boton_redondo</item>
+    <style name="Creditos">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/creditos</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- Tablero -->
+    <style name="FilaTablero">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="backgroundTint">@color/blue_start</item>
-        <item name="android:background">@drawable/boton_redondo</item>
-        <item name="android:layout_marginTop">5dp</item>
-
+        <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="Base.TextAppearance.AppCompat.Widget.Button.linea_botones" parent="TextAppearance.AppCompat.Widget.Button">
+    <style name="Casilla" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:background">@drawable/boton_redondo</item>
+        <item name="backgroundTint">@color/blue_start</item>
+        <item name="android:foreground">@drawable/borde_casilla</item>
+        <item name="android:src">@null</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">14dp</item>
+    </style>
+
+    <style name="MarcaTurno">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/circulo</item>
+        <item name="android:backgroundTint">@color/blue_start</item>
+    </style>
+
+    <!-- Botones bajo el tablero -->
+    <style name="BotonPartida" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_margin">7dp</item>
         <item name="backgroundTint">#212121</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">10sp</item>
-        <item name="android:layout_margin">7dp</item>
         <item name="fontFamily">@font/audiowide</item>
     </style>
 
-    <style name="Widget.AppCompat.TextView.winner" parent="Widget.AppCompat.TextView">
+    <!-- Marcador -->
+    <style name="ColumnaMarcador">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="TextoSombreado">
+        <item name="fontFamily">@font/bangers</item>
+        <item name="android:fontFamily">@font/bangers</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDx">7</item>
+        <item name="android:shadowDy">7</item>
+        <item name="android:shadowRadius">7</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="NombreJugador" parent="TextoSombreado">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Puntuacion" parent="TextoSombreado">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/tamano_puntuacion</item>
+    </style>
+
+    <!-- Celebración -->
+    <style name="TextoGanador" parent="TextoSombreado">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:layout_marginBottom">125dp</item>
-        <item name="fontFamily">@font/bangers</item>
         <item name="android:textSize">80sp</item>
-        <!-- Margen para que la cursiva y la sombra no se recorten por los lados -->
-        <item name="android:paddingStart">24dp</item>
-        <item name="android:paddingEnd">24dp</item>
-        <item name="android:text">@string/prueba</item>
-        <item name="android:shadowColor">@color/black</item>
         <item name="android:shadowDx">10</item>
         <item name="android:shadowDy">10</item>
         <item name="android:shadowRadius">10</item>
-
+        <!-- Margen para que la cursiva y la sombra no se recorten por los lados -->
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
     </style>
 
 </resources>

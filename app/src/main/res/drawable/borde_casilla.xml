@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contorno de la casilla. Va en el foreground para que el tinte del fondo no lo cambie de color. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="35dp" />
+    <stroke
+        android:width="2dp"
+        android:color="@color/black" />
+</shape>

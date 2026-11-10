@@ -1,4 +1,4 @@
-package com.example.mytraya2;
+package com.bastianorellana.tresenraya;
 
 import org.junit.Before;
 import org.junit.Test;

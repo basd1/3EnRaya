@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyTraya2"
+rootProject.name = "TresEnRaya"
 include ':app'

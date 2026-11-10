@@ -1,4 +1,8 @@
-package com.example.mytraya2;
+package com.bastianorellana.tresenraya;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Estado y reglas del tres en raya, sin dependencias de Android.
@@ -19,6 +23,10 @@ final class Tablero {
 
     private final int[] casillas = new int[NUM_CASILLAS];
 
+    static int rival(int jugador) {
+        return jugador == J1 ? J2 : J1;
+    }
+
     int get(int casilla) {
         return casillas[casilla];
     }
@@ -35,15 +43,21 @@ final class Tablero {
         return true;
     }
 
-    /** Devuelve J1 o J2 si alguno tiene tres en raya, o VACIA si no hay ganador. */
-    int ganador() {
+    /** Devuelve las tres casillas de la línea ganadora, o null si nadie ha ganado. */
+    int[] lineaGanadora() {
         for (int[] linea : LINEAS) {
             int c = casillas[linea[0]];
             if (c != VACIA && c == casillas[linea[1]] && c == casillas[linea[2]]) {
-                return c;
+                return linea.clone();
             }
         }
-        return VACIA;
+        return null;
+    }
+
+    /** Devuelve J1 o J2 si alguno tiene tres en raya, o VACIA si no hay ganador. */
+    int ganador() {
+        int[] linea = lineaGanadora();
+        return linea == null ? VACIA : casillas[linea[0]];
     }
 
     boolean lleno() {
@@ -53,8 +67,26 @@ final class Tablero {
         return true;
     }
 
+    boolean terminado() {
+        return ganador() != VACIA || lleno();
+    }
+
+    List<Integer> casillasLibres() {
+        List<Integer> libres = new ArrayList<>();
+        for (int i = 0; i < NUM_CASILLAS; i++) {
+            if (casillas[i] == VACIA) libres.add(i);
+        }
+        return libres;
+    }
+
+    Tablero copia() {
+        Tablero t = new Tablero();
+        System.arraycopy(casillas, 0, t.casillas, 0, NUM_CASILLAS);
+        return t;
+    }
+
     void reiniciar() {
-        java.util.Arrays.fill(casillas, VACIA);
+        Arrays.fill(casillas, VACIA);
     }
 
     int[] exportar() {

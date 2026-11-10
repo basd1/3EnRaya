@@ -1,0 +1,4 @@
+<resources>
+    <!-- En horizontal hay menos alto disponible para el marcador -->
+    <dimen name="tamano_puntuacion">56sp</dimen>
+</resources>

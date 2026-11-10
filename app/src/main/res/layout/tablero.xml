@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablero 3x3 siempre cuadrado, con la raya ganadora dibujada encima -->
+<com.bastianorellana.tresenraya.ContenedorCuadrado xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tablero_contenedor"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:id="@+id/tabla_juego"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout style="@style/FilaTablero">
+            <ImageButton android:id="@+id/btn_arriba_izq" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_arriba_ctr" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_arriba_drc" style="@style/Casilla" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/FilaTablero">
+            <ImageButton android:id="@+id/btn_centro_izq" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_centro_ctr" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_centro_drc" style="@style/Casilla" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/FilaTablero">
+            <ImageButton android:id="@+id/btn_abajo_izq" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_abajo_ctr" style="@style/Casilla" />
+            <ImageButton android:id="@+id/btn_abajo_drc" style="@style/Casilla" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.bastianorellana.tresenraya.LineaGanadoraView
+        android:id="@+id/linea_ganadora"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</com.bastianorellana.tresenraya.ContenedorCuadrado>

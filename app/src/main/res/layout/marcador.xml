@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nombres y puntuaciones. Pulsar el nombre lo cambia; pulsar la puntuación cambia el color. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout style="@style/ColumnaMarcador">
+        <TextView
+            android:id="@+id/name1"
+            style="@style/NombreJugador" />
+        <TextView
+            android:id="@+id/punt1"
+            style="@style/Puntuacion" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/ColumnaMarcador">
+        <TextView
+            android:id="@+id/name2"
+            style="@style/NombreJugador" />
+        <TextView
+            android:id="@+id/punt2"
+            style="@style/Puntuacion" />
+    </LinearLayout>
+</LinearLayout>

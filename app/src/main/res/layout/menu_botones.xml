@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/principal_botones"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_local"
+        style="@style/BotonMenu"
+        android:text="@string/local" />
+
+    <Button
+        android:id="@+id/btn_ia"
+        style="@style/BotonMenu"
+        android:text="@string/contra_ia" />
+
+    <Button
+        android:id="@+id/btn_online"
+        style="@style/BotonMenu"
+        android:text="@string/online" />
+</LinearLayout>

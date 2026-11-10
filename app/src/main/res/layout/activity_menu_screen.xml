@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/menu_root"
     tools:context=".MenuScreen"
     android:background="@color/black">
 
@@ -45,7 +46,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/creditos"
-            android:layout_below="@id/principal_botones"
             android:textSize="11sp"
             android:textColor="@color/white"
             android:textAlignment="center"

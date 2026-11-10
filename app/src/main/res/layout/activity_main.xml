@@ -133,7 +133,7 @@
         <Button
             android:id="@+id/btn_ctn"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.linea_botones"
-            android:text="RESTART" />
+            android:text="@string/restart" />
         <Button
             android:id="@+id/btn_drc"
             style="@style/Base.TextAppearance.AppCompat.Widget.Button.linea_botones"

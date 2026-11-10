@@ -5,8 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputFilter;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,37 +16,51 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import dev.sasikanth.colorsheet.ColorSheet;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import nl.dionsegijn.konfetti.KonfettiView;
 import nl.dionsegijn.konfetti.models.Shape;
 import nl.dionsegijn.konfetti.models.Size;
-import top.defaults.colorpicker.ColorPickerPopup;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
-    String nombre1, nombre2, nombrepartida, win;
-    TextView titulo, punt1, punt2, name1, name2, mark1, mark2, win1, win2, win3; // titulo superior, puntuaciones y nombres
-    ImageButton b11,b12,b13,b21,b22,b23,b31,b32,b33; // casillas del tablero
-    Button b1, b2, b3; // botones inferiores
-    boolean turno; // booleano para controlar el turno
-    ArrayList<ImageButton> botones; // lista de las casillas del tablero
-    Map<Integer, int[]> states_btns; // el int[0] significa el tag, el int[1] es la posicion
-    ArrayList<int[]> check; // lista donde estan las combinaciones ganadoras
-    ArrayList<Integer> jug1, jug2; // listas donde se almacenan las casillas de cada jugador
-    int[] jug = {0,1,2}; // lista para controlar a quien pertenecen las casillas, 0=no usada, 1=j1, 2=j2
-    int rojo, azul, verde, color_j1, color_j2;
-    RelativeLayout lly;
-    FrameLayout cel_ly;
-    AnimationDrawable ad;
+    private static final int MAX_LONGITUD_NOMBRE = 13;
+    private static final float DESPLAZAMIENTO_CELEBRACION_DP = 50f;
+
+    private static final String KEY_TABLERO = "tablero";
+    private static final String KEY_TURNO_J1 = "turno_j1";
+    private static final String KEY_TERMINADA = "terminada";
+    private static final String KEY_PUNT1 = "punt1";
+    private static final String KEY_PUNT2 = "punt2";
+    private static final String KEY_NOMBRE1 = "nombre1";
+    private static final String KEY_NOMBRE2 = "nombre2";
+    private static final String KEY_NOMBRE_PARTIDA = "nombre_partida";
+    private static final String KEY_COLOR1 = "color1";
+    private static final String KEY_COLOR2 = "color2";
+
+    // Estado de la partida
+    private final Tablero tablero = new Tablero();
+    private boolean turnoJ1 = true;
+    private boolean partidaTerminada = false;
+    private int puntos1 = 0, puntos2 = 0;
+    private String nombre1, nombre2, nombrePartida;
+    private int colorJ1, colorJ2, colorVacia;
+
+    // Vistas
+    private TextView titulo, punt1, punt2, name1, name2, mark1, mark2;
+    private TextView[] textosGanador;
+    private final ImageButton[] casillas = new ImageButton[Tablero.NUM_CASILLAS];
+    private FrameLayout celebracionLayout;
+    private KonfettiView konfetti;
+    private AnimationDrawable fondoAnimado;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     // TODO maquillar la app con mejoras de diseño y de animaciones, añadir sonidos?
     // TODO trabajar el online
@@ -56,405 +70,326 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        turno = true;
+        RelativeLayout raiz = findViewById(R.id.layout_master);
+        Pantalla.configurar(this, raiz);
 
-        declaraciones();
-        preMatch();
-        startMatch();
-        checkturno(turno);
+        fondoAnimado = (AnimationDrawable) raiz.getBackground();
+        fondoAnimado.setEnterFadeDuration(10);
+        fondoAnimado.setExitFadeDuration(2000);
 
-        b1.setOnClickListener(view -> Toast.makeText(MainActivity.this, "Has pulsado el botón izquierdo", Toast.LENGTH_SHORT).show());
+        enlazarVistas();
+        configurarListeners();
 
-        b2.setOnClickListener(view -> {
-            Toast.makeText(MainActivity.this, "Has pulsado el botón central", Toast.LENGTH_SHORT).show();
-            restartMatch();
-            punt1.setText(String.valueOf(0));
-            punt2.setText(String.valueOf(0));
+        colorVacia = ContextCompat.getColor(this, R.color.blue_start);
+        if (savedInstanceState == null) {
+            nombre1 = getString(R.string.nombre_j1);
+            nombre2 = getString(R.string.nombre_j2);
+            nombrePartida = getString(R.string.prueba);
+            colorJ1 = ContextCompat.getColor(this, R.color.green_check);
+            colorJ2 = ContextCompat.getColor(this, R.color.red_check);
+        } else {
+            restaurarEstado(savedInstanceState);
+            cerrarColorSheetRestaurado();
+        }
 
+        refrescarUi();
+    }
+
+    private void enlazarVistas() {
+        celebracionLayout = findViewById(R.id.celebrate_layout);
+        konfetti = findViewById(R.id.viewKonfetti);
+
+        titulo = findViewById(R.id.text_titulo);
+        punt1 = findViewById(R.id.punt1);
+        punt2 = findViewById(R.id.punt2);
+        name1 = findViewById(R.id.name1);
+        name2 = findViewById(R.id.name2);
+        mark1 = findViewById(R.id.mark1);
+        mark2 = findViewById(R.id.mark2);
+
+        textosGanador = new TextView[]{
+                findViewById(R.id.win_blanco),
+                findViewById(R.id.win_yellow),
+                findViewById(R.id.win_orange)};
+
+        int[] ids = {
+                R.id.btn_arriba_izq, R.id.btn_arriba_ctr, R.id.btn_arriba_drc,
+                R.id.btn_centro_izq, R.id.btn_centro_ctr, R.id.btn_centro_drc,
+                R.id.btn_abajo_izq, R.id.btn_abajo_ctr, R.id.btn_abajo_drc};
+        for (int i = 0; i < ids.length; i++) {
+            casillas[i] = findViewById(ids[i]);
+        }
+    }
+
+    private void configurarListeners() {
+        for (int i = 0; i < casillas.length; i++) {
+            final int casilla = i;
+            casillas[i].setOnClickListener(v -> jugar(casilla));
+        }
+
+        Button online = findViewById(R.id.btn_izq);
+        Button restart = findViewById(R.id.btn_ctn);
+        Button otra = findViewById(R.id.btn_drc);
+
+        online.setText(R.string.online);
+        online.setOnClickListener(v ->
+                Toast.makeText(this, R.string.online_no_disponible, Toast.LENGTH_SHORT).show());
+
+        // RESTART: partida nueva y marcador a cero
+        restart.setOnClickListener(v -> {
+            puntos1 = 0;
+            puntos2 = 0;
+            turnoJ1 = true;
+            nuevaPartida();
         });
 
-        b3.setOnClickListener(view -> restartMatch());
+        // OTRA: partida nueva conservando el marcador
+        otra.setOnClickListener(v -> nuevaPartida());
 
-        name1.setOnClickListener(view1 -> showChangename(view1, 1));
+        name1.setOnClickListener(v -> mostrarCambioNombre(1));
+        name2.setOnClickListener(v -> mostrarCambioNombre(2));
+        titulo.setOnClickListener(v -> mostrarCambioNombre(3));
 
-        name2.setOnClickListener(view -> showChangename(view, 2));
-
-        titulo.setOnClickListener(view -> showChangename(view, 3));
-
-        punt1.setOnClickListener(view -> showColorPicker(1));
-        mark1.setOnClickListener(view -> showColorPicker(1));
-
-        punt2.setOnClickListener(view -> showColorPicker(2));
-        mark2.setOnClickListener(view -> showColorPicker(2));
+        punt1.setOnClickListener(v -> mostrarSelectorColor(1));
+        mark1.setOnClickListener(v -> mostrarSelectorColor(1));
+        punt2.setOnClickListener(v -> mostrarSelectorColor(2));
+        mark2.setOnClickListener(v -> mostrarSelectorColor(2));
     }
 
-    private void showColorPicker(int i) {
+    // ---------------------------------------------------------------- Lógica de juego
 
-        int[] colors = {getResources().getColor(R.color.green_check),
-        getResources().getColor(R.color.red_check),
-        getResources().getColor(R.color.orange),
-        getResources().getColor(R.color.black),
-        getResources().getColor(R.color.teal_700),
-        getResources().getColor(R.color.purple_200),
-        getResources().getColor(R.color.yellow),
-        getResources().getColor(R.color.azul_oscuro),
-        getResources().getColor(R.color.gris),
-        getResources().getColor(R.color.rosa),
-        getResources().getColor(R.color.verde_oscuro),
-        Color.WHITE};
+    private void jugar(int casilla) {
+        if (partidaTerminada) return;
 
-        new ColorSheet().colorPicker(colors, null, false, new Function1<Integer, Unit>() {
-            @Override
-            public Unit invoke(Integer color) {
-                if (i==1){
-                    color_j1 = color;
-                    mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                    name1.setTextColor(color_j1);
+        int jugador = turnoJ1 ? Tablero.J1 : Tablero.J2;
+        if (!tablero.jugar(casilla, jugador)) {
+            Toast.makeText(this, R.string.casilla_ocupada, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                }else if (i==2){
-                    color_j2 = color;
-                    mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                    name2.setTextColor(color_j2);
-                }
-                for (ImageButton ib2 : botones){
-                    for (Integer key : states_btns.keySet()){
-                        Log.e("X","La key de esto es "+key);
-                        Log.e("X","El tag de esto es "+ib2.getTag());
-                        if (ib2.getTag() == key){
-                            int[] aux4 = states_btns.get(key);
-                            if (aux4[1] == 1){
-                                ib2.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                            }else if (aux4[1] == 2){
-                                ib2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                            }
-                        }
-                    }
-                }
-                return null;
-            }
-        }).show(getSupportFragmentManager());
+        int ganador = tablero.ganador();
+        if (ganador == Tablero.J1) {
+            puntos1++;
+            terminarPartida();
+            celebrar(nombre1);
+        } else if (ganador == Tablero.J2) {
+            puntos2++;
+            terminarPartida();
+            celebrar(nombre2);
+        } else if (tablero.lleno()) {
+            terminarPartida();
+            Toast.makeText(this, R.string.empate, Toast.LENGTH_SHORT).show();
+        }
 
+        // El turno alterna siempre, así la siguiente partida la empieza el otro jugador
+        turnoJ1 = !turnoJ1;
+        refrescarUi();
     }
 
-    private void preMatch() {
+    private void terminarPartida() {
+        partidaTerminada = true;
+    }
+
+    private void nuevaPartida() {
+        cancelarCelebracion();
+        tablero.reiniciar();
+        partidaTerminada = false;
+        refrescarUi();
+    }
+
+    // ---------------------------------------------------------------- UI
+
+    private void refrescarUi() {
+        titulo.setText(nombrePartida);
         name1.setText(nombre1);
         name2.setText(nombre2);
+        name1.setTextColor(colorJ1);
+        name2.setTextColor(colorJ2);
+        punt1.setText(String.valueOf(puntos1));
+        punt2.setText(String.valueOf(puntos2));
 
-        name1.setTextColor(color_j1);
-        name2.setTextColor(color_j2);
+        mark1.setBackgroundTintList(ColorStateList.valueOf(colorJ1));
+        mark2.setBackgroundTintList(ColorStateList.valueOf(colorJ2));
+        mark1.setVisibility(turnoJ1 ? View.VISIBLE : View.INVISIBLE);
+        mark2.setVisibility(turnoJ1 ? View.INVISIBLE : View.VISIBLE);
 
-        titulo.setText(nombrepartida);
-
-        b1.setText(R.string.online);
-
-        mark1.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-        mark2.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-
-        mark1.setVisibility(View.INVISIBLE);
-        mark2.setVisibility(View.INVISIBLE);
-    }
-
-    private void showChangename(View view, int i2) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-
-        TextView tv = (TextView) view;
-        alert.setTitle("Cambiar el nombre");
-        alert.setMessage("Pon el nombre que quieras usar ahora");
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(MainActivity.this);
-        input.setText(String.valueOf(tv.getText()));
-        input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(13)});
-        alert.setView(input);
-
-        alert.setPositiveButton("Ok", (dialog, whichButton) -> {
-            String newText = input.getText().toString();
-            tv.setText(newText);
-            if (i2==1){
-                nombre1 = newText;
-            }else if (i2 == 2){
-                nombre2 = newText;
-            }else if (i2 == 3){
-                nombrepartida = newText;
-            }
-        });
-
-        alert.create().show();
-    }
-
-    private void startMatch() {
-
-        states_btns = new HashMap<>();
-        check = new ArrayList<>();
-        jug1 = new ArrayList<>();
-        jug2 = new ArrayList<>();
-
-        seteandoClickListener();
-        check = putSoluciones(check);
-
-        botones = new ArrayList<>(Arrays.asList(b11,b12,b13,b21,b22,b23,b31,b32,b33));
-
-        states_btns = putMapStates(botones, states_btns);
-
-    }
-
-    private void restartMatch() {
-        for (ImageButton boton : botones){
-            boton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue_start)));
-        }
-        settingClickable(true);
-        startMatch();
-    }
-
-    private Map<Integer, int[]> putMapStates(ArrayList<ImageButton> b, Map<Integer, int[]> sb) {
-
-        int i = 0;
-        Log.e("X","prueba");
-        System.out.println(sb.size()+" "+ b.size());
-
-        for (ImageButton ib: b){
-            int[] auxxx = new int[2];
-            auxxx[0] = i;
-            auxxx[1] = jug[0];
-            ib.setTag((i+5)*110697);
-            sb.put((Integer) ib.getTag(),auxxx);
-            i++;
-        }
-        return sb;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        int[] aux2 =  states_btns.get(v.getTag());
-
-        if (aux2[1] == jug[0]){
-            if (turno){
-                v.setBackgroundTintList(ColorStateList.valueOf(color_j1));
-                aux2[1] = jug[1];
-            }else{
-                v.setBackgroundTintList(ColorStateList.valueOf(color_j2));
-                aux2[1] = jug[2];
-            }
-            states_btns.put((Integer) v.getTag(),aux2);
-            updateStates();
-            checkerWinner();
-            turno = !turno;
-            checkturno(turno);
-
-        }else {
-            Toast.makeText(this, "Juega en otra casilla", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void checkturno(boolean t) {
-
-        if (t){
-            mark1.setVisibility(View.VISIBLE);
-            mark2.setVisibility(View.INVISIBLE);
-        }else{
-            mark1.setVisibility(View.INVISIBLE);
-            mark2.setVisibility(View.VISIBLE);
+        for (int i = 0; i < casillas.length; i++) {
+            casillas[i].setBackgroundTintList(ColorStateList.valueOf(colorDeCasilla(tablero.get(i))));
         }
     }
 
-    private void updateStates() {
-        for (Integer key : states_btns.keySet()) {
-            int[] aux3 = states_btns.get(key);
-            if (aux3[1] == 0){
-                System.out.println("En la posicion "+key+" "+aux3[0]+" nadie esta aun");
-            }else if (aux3[1] == 1){
-                System.out.println("En la posicion "+key+" "+aux3[0]+" esta el j1");
-                jug1.add(aux3[0]);
-            }else if (aux3[1] == 2) {
-                System.out.println("En la posicion " + key + " " + aux3[0] + " esta el j2");
-                jug2.add(aux3[0]);
-            }else {
-                Log.e("X", "algo falla");
+    private int colorDeCasilla(int estado) {
+        if (estado == Tablero.J1) return colorJ1;
+        if (estado == Tablero.J2) return colorJ2;
+        return colorVacia;
+    }
+
+    private void mostrarCambioNombre(int objetivo) {
+        String actual = objetivo == 1 ? nombre1 : objetivo == 2 ? nombre2 : nombrePartida;
+
+        final EditText input = new EditText(this);
+        input.setText(actual);
+        input.setSelection(input.getText().length());
+        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LONGITUD_NOMBRE)});
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.cambiar_nombre_titulo)
+                .setMessage(R.string.cambiar_nombre_mensaje)
+                .setView(input)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    String nuevo = input.getText().toString().trim();
+                    if (nuevo.isEmpty()) return; // un nombre vacío dejaría el texto invisible
+                    if (objetivo == 1) nombre1 = nuevo;
+                    else if (objetivo == 2) nombre2 = nuevo;
+                    else nombrePartida = nuevo;
+                    refrescarUi();
+                })
+                .setNegativeButton(R.string.cancelar, null)
+                .show();
+    }
+
+    private void mostrarSelectorColor(int jugador) {
+        int[] colores = {
+                ContextCompat.getColor(this, R.color.green_check),
+                ContextCompat.getColor(this, R.color.red_check),
+                ContextCompat.getColor(this, R.color.orange),
+                ContextCompat.getColor(this, R.color.black),
+                ContextCompat.getColor(this, R.color.teal_700),
+                ContextCompat.getColor(this, R.color.purple_200),
+                ContextCompat.getColor(this, R.color.yellow),
+                ContextCompat.getColor(this, R.color.azul_oscuro),
+                ContextCompat.getColor(this, R.color.gris),
+                ContextCompat.getColor(this, R.color.rosa),
+                ContextCompat.getColor(this, R.color.verde_oscuro),
+                Color.WHITE};
+        Integer seleccionado = jugador == 1 ? colorJ1 : colorJ2;
+
+        new ColorSheet().colorPicker(colores, seleccionado, false, color -> {
+            if (jugador == 1) colorJ1 = color;
+            else colorJ2 = color;
+            refrescarUi();
+            return Unit.INSTANCE;
+        }).show(getSupportFragmentManager());
+    }
+
+    /**
+     * ColorSheet no guarda sus colores ni su callback al recrearse la actividad (al girar
+     * la pantalla, por ejemplo) y reaparecería vacío. Se cierra para que el usuario lo
+     * vuelva a abrir.
+     */
+    private void cerrarColorSheetRestaurado() {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f instanceof ColorSheet) {
+                ((ColorSheet) f).dismissAllowingStateLoss();
             }
         }
     }
 
-    private void checkerWinner() {
+    // ---------------------------------------------------------------- Celebración
 
-        for (int[] lista : check){
+    private void celebrar(String ganador) {
+        Toast.makeText(this, getString(R.string.gana_jugador, ganador), Toast.LENGTH_SHORT).show();
 
-            System.out.println("la lista comprobando es " + lista[0] + " " + lista[1] + " " + lista[2]);
-
-            if (jug1.contains(lista[0]) && jug1.contains(lista[1]) && jug1.contains(lista[2])){
-                Toast.makeText(this, "Gana el jugador 1", Toast.LENGTH_SHORT).show();
-                Log.e("X","GANA EL J1");
-                settingClickable(false);
-                int p = Integer.parseInt(String.valueOf(punt1.getText()));
-                p++;
-                punt1.setText(String.valueOf(p));
-                celebracion(1);
-                break;
-            }else if (jug2.contains(lista[0]) && jug2.contains(lista[1]) && jug2.contains(lista[2])){
-                Toast.makeText(this, "Gana el jugador 2", Toast.LENGTH_SHORT).show();
-                Log.e("X","GANA EL J2");
-                settingClickable(false);
-                int p = Integer.parseInt(String.valueOf(punt2.getText()));
-                p++;
-                punt2.setText(String.valueOf(p));
-                celebracion(2);
-
-                break;
-            }
-        }
-    }
-
-    private void celebracion(int j) {
-
-        if (j==1){
-            win = nombre1;
-        }else if (j==2){
-            win = nombre2;
-        }
-
-        final KonfettiView viewKonfetti = findViewById(R.id.viewKonfetti);
-        viewKonfetti.build()
+        konfetti.build()
                 .addColors(Color.YELLOW, Color.WHITE)
                 .setDirection(0.0, 359.0)
                 .setSpeed(1f, 5f)
                 .setFadeOutEnabled(true)
                 .setTimeToLive(2000L)
-                .addShapes(Shape.RECT, Shape.CIRCLE)
-                .addSizes(new Size(12, 5))
-                .setPosition(-50f, viewKonfetti.getWidth() + 50f, -50f, -50f)
+                .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                .addSizes(new Size(12, 5f))
+                .setPosition(-50f, konfetti.getWidth() + 50f, -50f, -50f)
                 .streamFor(300, 5000L);
 
-
-        TextView[] tva = {win1, win2, win3};
-        for (TextView tva0 : tva){
-            tva0.setText("WINNER\n"+win);
+        String texto = getString(R.string.ganador, ganador);
+        for (TextView tv : textosGanador) {
+            tv.setText(texto);
+            tv.setVisibility(View.VISIBLE);
         }
-        //TODO corregir la celebracion, no se ve el mensaje en el textview
-        cel_ly.setVisibility(View.VISIBLE);
-        cel_ly.setAlpha(0.0f);
-        cel_ly.animate().alpha(1.0f);
-        cel_ly.animate().translationY(-150);
+        TextView amarillo = textosGanador[1];
+        TextView naranja = textosGanador[2];
 
-        Handler h = new Handler();
-        h.postDelayed(() -> win3.setVisibility(View.INVISIBLE),500);
-        h.postDelayed(() -> win2.setVisibility(View.INVISIBLE), 1000);
-        h.postDelayed(() -> win3.setVisibility(View.VISIBLE), 1500);
-        h.postDelayed(() -> {
-            win2.setVisibility(View.VISIBLE);
-            win3.setVisibility(View.INVISIBLE);
-        },2000);
-        h.postDelayed(() -> win2.setVisibility(View.INVISIBLE), 2500);
-        h.postDelayed(() -> win3.setVisibility(View.VISIBLE), 3000);
-        h.postDelayed(() -> {
-            cel_ly.animate().translationY(150);
-            cel_ly.animate().alpha(0.0f);
-        },4500);
+        float desplazamiento = DESPLAZAMIENTO_CELEBRACION_DP * getResources().getDisplayMetrics().density;
+
+        celebracionLayout.animate().cancel();
+        celebracionLayout.setTranslationY(0f);
+        celebracionLayout.setAlpha(0f);
+        celebracionLayout.setVisibility(View.VISIBLE);
+        celebracionLayout.animate().alpha(1f).translationY(-desplazamiento);
+
+        // Parpadeo alternando los colores del texto
+        handler.postDelayed(() -> naranja.setVisibility(View.INVISIBLE), 500);
+        handler.postDelayed(() -> amarillo.setVisibility(View.INVISIBLE), 1000);
+        handler.postDelayed(() -> naranja.setVisibility(View.VISIBLE), 1500);
+        handler.postDelayed(() -> {
+            amarillo.setVisibility(View.VISIBLE);
+            naranja.setVisibility(View.INVISIBLE);
+        }, 2000);
+        handler.postDelayed(() -> amarillo.setVisibility(View.INVISIBLE), 2500);
+        handler.postDelayed(() -> naranja.setVisibility(View.VISIBLE), 3000);
+        handler.postDelayed(() -> celebracionLayout.animate()
+                .alpha(0f)
+                .translationY(desplazamiento)
+                .withEndAction(this::ocultarCelebracion), 4500);
     }
 
-    private void settingClickable(boolean b) {
-        for (ImageButton ib : botones) ib.setClickable(b);
+    private void cancelarCelebracion() {
+        handler.removeCallbacksAndMessages(null);
+        celebracionLayout.animate().cancel();
+        ocultarCelebracion();
     }
 
-    private void seteandoClickListener() {
-
-        b11.setOnClickListener(this);
-        b12.setOnClickListener(this);
-        b13.setOnClickListener(this);
-        b21.setOnClickListener(this);
-        b22.setOnClickListener(this);
-        b23.setOnClickListener(this);
-        b31.setOnClickListener(this);
-        b32.setOnClickListener(this);
-        b33.setOnClickListener(this);
+    private void ocultarCelebracion() {
+        celebracionLayout.setVisibility(View.INVISIBLE);
+        celebracionLayout.setAlpha(1f);
+        celebracionLayout.setTranslationY(0f);
     }
 
-    private void declaraciones() {
+    // ---------------------------------------------------------------- Ciclo de vida
 
-        lly = findViewById(R.id.layout_master);
-        cel_ly = findViewById(R.id.celebrate_layout);
-
-        ad = (AnimationDrawable) lly.getBackground();
-        ad.setEnterFadeDuration(10);
-        ad.setExitFadeDuration(2000);
-        ad.start();
-
-        titulo = findViewById(R.id.text_titulo);
-
-        punt1 = findViewById(R.id.punt1);
-        punt2 = findViewById(R.id.punt2);
-
-        name1 = findViewById(R.id.name1);
-        name2 = findViewById(R.id.name2);
-
-        win1 = findViewById(R.id.win_blanco);
-        win2 = findViewById(R.id.win_yellow);
-        win3 = findViewById(R.id.win_orange);
-
-        win = "";
-
-        nombre1 = "J1";
-        nombre2 = "J2";
-
-        nombrepartida = getString(R.string.prueba);
-
-        mark1 = findViewById(R.id.mark1);
-        mark2 = findViewById(R.id.mark2);
-
-        azul = getResources().getColor(R.color.blue_start);
-        rojo = getResources().getColor(R.color.red_check);
-        verde = getResources().getColor(R.color.green_check);
-
-        color_j1 = verde;
-        color_j2 = rojo;
-
-        b11 = findViewById(R.id.btn_arriba_izq);
-        b12 = findViewById(R.id.btn_arriba_ctr);
-        b13 = findViewById(R.id.btn_arriba_drc);
-        b21 = findViewById(R.id.btn_centro_izq);
-        b22 = findViewById(R.id.btn_centro_ctr);
-        b23 = findViewById(R.id.btn_centro_drc);
-        b31 = findViewById(R.id.btn_abajo_izq);
-        b32 = findViewById(R.id.btn_abajo_ctr);
-        b33 = findViewById(R.id.btn_abajo_drc);
-
-        b1 = findViewById(R.id.btn_izq);
-        b2 = findViewById(R.id.btn_ctn);
-        b3 = findViewById(R.id.btn_drc);
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray(KEY_TABLERO, tablero.exportar());
+        outState.putBoolean(KEY_TURNO_J1, turnoJ1);
+        outState.putBoolean(KEY_TERMINADA, partidaTerminada);
+        outState.putInt(KEY_PUNT1, puntos1);
+        outState.putInt(KEY_PUNT2, puntos2);
+        outState.putString(KEY_NOMBRE1, nombre1);
+        outState.putString(KEY_NOMBRE2, nombre2);
+        outState.putString(KEY_NOMBRE_PARTIDA, nombrePartida);
+        outState.putInt(KEY_COLOR1, colorJ1);
+        outState.putInt(KEY_COLOR2, colorJ2);
     }
 
-    private ArrayList<int[]> putSoluciones(ArrayList<int[]> ch) {
-        ch.add(new int[]{0, 1, 2});
-        ch.add(new int[]{0, 3, 6});
-        ch.add(new int[]{0, 4, 8});
-        ch.add(new int[]{1, 4, 7});
-        ch.add(new int[]{2, 5, 8});
-        ch.add(new int[]{2, 4, 6});
-        ch.add(new int[]{3, 4, 5});
-        ch.add(new int[]{6, 7, 8});
-
-        Log.e("X","hay un total de "+ch.size()+" soluciones");
-        return ch;
+    private void restaurarEstado(@NonNull Bundle in) {
+        tablero.importar(in.getIntArray(KEY_TABLERO));
+        turnoJ1 = in.getBoolean(KEY_TURNO_J1, true);
+        partidaTerminada = in.getBoolean(KEY_TERMINADA, false);
+        puntos1 = in.getInt(KEY_PUNT1);
+        puntos2 = in.getInt(KEY_PUNT2);
+        nombre1 = in.getString(KEY_NOMBRE1, getString(R.string.nombre_j1));
+        nombre2 = in.getString(KEY_NOMBRE2, getString(R.string.nombre_j2));
+        nombrePartida = in.getString(KEY_NOMBRE_PARTIDA, getString(R.string.prueba));
+        colorJ1 = in.getInt(KEY_COLOR1, ContextCompat.getColor(this, R.color.green_check));
+        colorJ2 = in.getInt(KEY_COLOR2, ContextCompat.getColor(this, R.color.red_check));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(ad!=null) {
-            if (!ad.isRunning()) {
-                ad.start();
-            }
-        }
+        if (!fondoAnimado.isRunning()) fondoAnimado.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(ad!=null) {
-            super.onPause();
-            if (ad.isRunning()) {
-                ad.stop();
-            }
-        }
+        if (fondoAnimado.isRunning()) fondoAnimado.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 }

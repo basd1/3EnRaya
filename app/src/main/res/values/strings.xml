@@ -6,10 +6,22 @@
     <string name="prueba_num">0</string>
     <string name="prueba2">Partida de prueba</string>
     <string name="otra">OTRA</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="restart">RESTART</string>
     <string name="online">ONLINE</string>
     <string name="local">1VS1</string>
     <string name="incognita">...</string>
     <string name="creditos">Hecho por Bas O. 2021. Tres en raya TicTacToe</string>
+
+    <string name="nombre_j1">J1</string>
+    <string name="nombre_j2">J2</string>
+    <string name="ganador">WINNER\n%1$s</string>
+    <string name="gana_jugador">Gana %1$s</string>
+    <string name="empate">¡Empate!</string>
+    <string name="casilla_ocupada">Juega en otra casilla</string>
+    <string name="online_no_disponible">El modo online aún no está disponible</string>
+    <string name="opcion_no_disponible">Esta opción aún no está disponible</string>
+    <string name="cambiar_nombre_titulo">Cambiar el nombre</string>
+    <string name="cambiar_nombre_mensaje">Pon el nombre que quieras usar ahora</string>
+    <string name="ok">Ok</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

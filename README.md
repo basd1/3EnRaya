@@ -10,7 +10,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/basd1/3EnRaya/actions/workflows/ci.yml"><img src="https://github.com/basd1/3EnRaya/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/minSdk-24-3DDC84?logo=android&logoColor=white" alt="minSdk 24">
   <img src="https://img.shields.io/badge/targetSdk-36-3DDC84?logo=android&logoColor=white" alt="targetSdk 36">
   <img src="https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white" alt="Java 17">
@@ -107,9 +106,6 @@ flowchart LR
 - **`GameActivityTest`** (Espresso) juega una partida completa desde la interfaz y comprueba el
   marcador, el cartel del ganador, las descripciones de accesibilidad y que el marcador se conserva al
   volver a entrar.
-
-El CI ejecuta lint, los tests unitarios y los de Espresso en un emulador en cada push
-([workflow](.github/workflows/ci.yml)).
 
 ## Compilar
 
